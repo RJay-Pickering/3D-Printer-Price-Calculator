@@ -1,0 +1,105 @@
+@import url('https://fonts.googleapis.com/css?family=Open%20Sans:800');
+
+/* main menu */
+body, html {
+    margin: 0;
+    width: 100%;
+    height: 100%;
+    background-color: #323330;
+    color: #ffffff;
+}
+
+.centered_content {
+    margin: 0;
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    text-align: center;
+}
+
+.lang {
+    width: fit-content;
+    display: flex;
+}
+
+.plz-center {
+    width: 100%;
+    display: flex;
+    justify-content: center;
+}
+
+.lang:hover {
+    text-decoration: wavy;
+}
+
+.py, .js, .menu {
+    color: #ffffff;
+    text-decoration: none;
+}
+
+.py:hover {
+    color: #3776ab;
+}
+
+.js:hover, .menu:hover {
+    color: #F0DB4F;
+}
+/* end of main menu */
+
+/* web view */
+.web-view {
+    font-family: 'Open Sans';
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+    text-align: center;
+    border-radius: 1rem;
+    background-color: rgba(0,0,0, 0.2);
+    backdrop-filter: blur(50px);
+    -webkit-backdrop-filter: blur(50px);
+}
+
+.menu {
+    position: absolute;
+    top: 1em;
+    left: 1em;
+}
+
+.contentA {
+    width: 25%;
+    display: initial;
+}
+
+.contentA button {
+    color: whitesmoke;
+    background-color: blueviolet;
+}
+
+.contentB {
+    width: 25%;
+    display: none;
+}
+
+.contentB button {
+    color: whitesmoke;
+    background-color: blueviolet;
+}
+
+.contentC {
+    width: 25%;
+    display: none;
+}
+
+.contentD {
+    width: 25%;
+    display: none;
+}
+
+#breakdown {
+    align-items: left;
+    text-align: left;
+    display: initial;
+}
+/* end of web view */

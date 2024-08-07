@@ -1,0 +1,64 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>3dppc</title>
+    <link rel="stylesheet" href="../style.css">
+</head>
+<body class="web-view">
+    <a href="../index.html" class="menu">return</a>
+    <div class="contentA" id="contentA">
+        <H2>Deprecation Cost:</H2>
+        <p>how much does your 3d printer cost?</p>
+        <input type="number" name="printer_cost" id="printerCost">
+        <p>How many hours does your machine have (they normally average around 20,000 hours)?<br>Leave empty if your not sure.</p>
+        <input type="number" name="machine_hours" id="machineHours">
+        <p>How many HOURS would/did it take to print?</p>
+        <input type="number" name="print_hours" id="printHour">
+        <p>How many MINUTES would/did it take to print?</p>
+        <input type="number" name="print_minutes" id="printMinutes">
+        <button id="nextSectionA">next</button>
+    </div>
+    <div class="contentB" id="contentB">
+        <H2>Filament Cost:</H2>
+        <p>how much does it cost for a kilogram of your roll of filament?</p>
+        <input type="number" name="price_per_kg" id="pricePerKg">
+        <p>How much would/does the model weigh in grams?</p>
+        <input type="number" name="model_weight" id="modelWeight">
+        <button id="nextSectionB">next</button>
+    </div>
+    <div class="contentC" id="contentC">
+        <H2>Other Costs:</H2>
+        <p>How much do you wanna charge an hour for each print?</p>
+        <input type="number" min="0" name="hourly_rate" id="hourlyRate">
+        <p>What percentage do you want to charge for your model as profit?</p>
+        <input type="number" min="0" max="100" name="profit" id="profit"><br>
+        <input type="submit" value="Calculate" id="submitBTN">
+    </div>
+
+    <div class="contentD" id="contentD">
+        <div id="result">
+            <!-- test data for css -->
+            Your total for this project is $15.02!
+            <!-- test data for css -->
+        </div>
+        <div id="breakdown">
+            <!-- test data for css -->
+            Here is how we got the total:<br>
+            <br>
+            Deprecation cost: $1.51<br>
+            Filament cost: $0.25<br>
+            Other costs: $7.5<br>
+            Total before profit: $9.26<br>
+            Profit: $5.56<br>
+            Total after profit: $14.82<br>
+            <!-- test data for css -->
+        </div>
+        <form action="" method="get">
+            <button type="submit">Refresh</button>
+        </form>
+    </div>
+</body>
+<script src="index.js" defer></script>
+</html>

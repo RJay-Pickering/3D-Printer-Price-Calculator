@@ -1,0 +1,205 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <title>3D Print Price Calculator</title>
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta content="width=device-width, initial-scale=1, maximum-scale=1, user-scalable=no" name="viewport">
+    <!-- Bootstrap 3.3.7 -->
+    <link rel="stylesheet" href="https://www.online-python.com/assets/bower_components/bootstrap/dist/css/bootstrap.min.css">
+    <!-- Font Awesome -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.2/css/all.min.css">
+    <!-- Custom CSS -->
+    <link rel="stylesheet" href="https://www.online-python.com/assets/dist/css/ide.css?v=a1">
+    <!-- jQuery 3 -->
+    <script src="https://www.online-python.com/assets/bower_components/jquery/dist/jquery.min.js"></script>
+    <!-- Bootstrap 3.3.7 -->
+    <script src="https://www.online-python.com/assets/bower_components/bootstrap/dist/js/bootstrap.min.js"></script>
+    <script src="https://www.online-python.com/assets/dist/js/ide.js?v=a1"></script>
+    <!-- Ace Editor -->
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/ace/1.4.8/ace.js" type="text/javascript" charset="utf-8"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/ace/1.4.8/ext-settings_menu.min.js" type="text/javascript" charset="utf-8"></script>
+    <!-- Split JS -->
+    <script async src="https://cdnjs.cloudflare.com/ajax/libs/socket.io/2.3.0/socket.io.js"></script>
+</head>
+<body>
+    <div class="container" id="container">
+        <div id="mi" class="split" style="height: auto;">
+
+            <!-- editor -->
+            <ul class="nav nav-tabs" role="tablist" style="display:none;">
+                <li class="active" id="editor-1"><a data-toggle="tab">main.py</a></li>
+                <li id="new_file_btn"><button type="button" class="btn btn-default btn-sm add-editor" id="create_tab" data-title="New File"><i class="fas fa-plus"></i></button></li>
+            </ul>
+            
+            <div id="editor" style="display:none;"></div>
+
+            <div class="boxed" id="editor_footer"></div>
+            <!-- ------ -->
+
+            <div class="control-bar">
+                <div id="control-btn">
+                <button type="button" class="btn btn-success btn-sm" id="run-btn" onclick="run_python()" data-toggle="popover" data-placement="bottom" data-trigger="hover" data-content="F8"><i class="fa fa-play"></i>&ensp;<strong>Run</strong></button>
+                </div>
+                <input class="textbox" type="text" id="input_arguments" placeholder=" Command Line Arguments">
+                <a type="button" class="btn btn-default btn-sm" data-toggle="popover" data-placement="right" data-trigger="hover" href="../index.html" style="color: #ccc; background-color: rgb(39, 40, 43); transition: 0.5s;">
+                    <i class="fa-sharp fa-solid fa-backward"></i>&ensp;
+                    <strong>Return</strong>
+                </a>
+            </div>
+
+        </div>
+
+        <div id="d" class="split" style="height: 100%;">
+            <div class="boxed1" id="output_header">
+                <div id="hint-section"></div>
+                <div id="output-status"></div>
+            </div>
+
+            <div id="terminal">
+                <div id="progress-status"></div>
+                <div class="boxed2" id="output"></div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Save Result modal -->
+    <div class="modal fade" tabindex="-1" role="dialog" id="downloadResult">
+        <div class="modal-dialog" role="document">
+            <div class="modal-content">
+                <div class="modal-body">
+                    <form>
+                        <div class="form-group">
+                            <label for="name">File Name:</label>
+                            <input type="text" class="form-control" id="download_file_name" value="main_output.txt">
+                        </div>
+                    </form>
+                </div>
+            </div><!-- /.modal-content -->
+        </div><!-- /.modal-dialog -->
+    </div><!-- /.modal -->
+</body>
+<script type="text/javascript">
+    ace.require("ace/ext/language_tools");
+    var editor = ace.edit("editor");
+    ace.require('ace/ext/settings_menu').init(editor);
+    var editor_cnt = 1, editor_session = [];
+    var request, init_ts, open_file_name;
+    var lang = 'python3';
+    default_content = '\
+import os\n\
+\n\
+def deprecationCost():\n\
+    while True:\n\
+        try:\n\
+            machine_cost = int(input("how much did you pay for your 3d printer? $"))\n\
+            break\n\
+        except:\n\
+            print("Try rounding the cost to a whole number and submit that!")\n\
+    while True:\n\
+        try:\n\
+            machine_hours = int(input("How many hours does your machine have (they normally average around 20,000 hours)? "))\n\
+            break\n\
+        except:\n\
+            print("Please submit whole numbers and numbers without commas. (ex: 20000)")\n\
+    while True:\n\
+        try:\n\
+            print_hours = float(input("How many HOURS would/did it take to print? "))\n\
+            break\n\
+        except:\n\
+            print("Please submit the information correctly!")\n\
+    while True:\n\
+        try:\n\
+            print_minutes = float(input("How many MINUTES would/did it take to print? "))\n\
+            break\n\
+        except:\n\
+            print("Please submit the information correctly!")\n\
+    print_time = print_hours + print_minutes / 60\n\
+    return [round((machine_cost / machine_hours) + print_time, 4), print_time]\n\
+\n\
+def filamentCost():\n\
+    while True:\n\
+        try:\n\
+            price_per_kg = float(input("how much is a kilogram of your roll of filament? $"))\n\
+            break\n\
+        except:\n\
+            print("you need to put a number...!")\n\
+    while True:\n\
+        try:\n\
+            model_weight = float(input("How much would/does the model weigh in grams? "))\n\
+            break\n\
+        except:\n\
+            print("Please submit how much it weighs in grams.")\n\
+    return round((price_per_kg / 1000) * model_weight, 4)\n\
+\n\
+def otherCosts(print_time):\n\
+    return 5 * print_time\n\
+\n\
+\n\
+def main():\n\
+    print("--- Deprecation Cost ---")\n\
+    DC = deprecationCost()\n\
+    print("--- Filament Cost ---")\n\
+    FC = filamentCost()\n\
+    OC = otherCosts(DC[1])\n\
+    base_price = DC[0] + FC + OC\n\
+    profit = base_price * 0.6\n\
+    total = base_price + profit\n\
+    print(f"Your total for this project is ${round(total, 2)}!")\n\
+    print(f"""\n\
+Here is how we got the total:\n\
+Deprecation cost: ${round(DC[0], 2)}\n\
+Filament cost: ${round(FC, 2)}\n\
+Other costs: ${round(OC, 2)}\n\
+Total before profit: ${round(base_price, 2)}\n\
+Profit: ${round(profit, 2)}\n\
+Total after profit: ${round(total, 2)}\n\
+""")\n\
+\n\
+\n\
+if __name__ == "__main__":\n\
+    main()\n\
+';
+    var prev_result = 'in'; 
+
+
+    var isMobile = window.orientation > -1;
+    
+
+    editor.setTheme('ace/theme/tomorrow_night_bright');
+    editor.container.style.lineHeight = 1.5;
+
+    editor_session[0] = ace.createEditSession(default_content, 'ace/mode/python');
+    editor.setSession(editor_session[0]);
+    var active_editor_id = $('#editor-1').children('a');
+    var active_file_name = 'main.py';
+    var repl_host = get_host();
+    var command_list = [];
+    var command_index = 0;
+    var cur_cmd;
+    var hint_glow;
+
+    var y = document.getElementById('editor_footer');
+    var output = document.getElementById('output');
+    var exec_detail = document.getElementById('output-status');
+    var progress_status = document.getElementById('progress-status');
+
+
+    $('body').addClass('dark');
+    
+
+    socket_options = { 
+        transports: ['websocket'], 
+        'timeout': 3000, 
+        'connect timeout': 3000,
+        'reconnection': true,
+        'reconnectionDelay': 1000,
+        'reconnectionDelayMax' : 5000,
+        'reconnectionAttempts': 5
+    };
+
+    socket_options['query'] = { type : 'shell'};
+
+    alert("Please click the run button to start the demo of the code!")
+</script>
+</html>
